@@ -1,0 +1,1 @@
+export { useTicketSplitStore } from "./ticketSplitStore";

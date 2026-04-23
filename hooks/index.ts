@@ -1,0 +1,1 @@
+export { useTicketRouteId } from "./useTicketRouteId";
