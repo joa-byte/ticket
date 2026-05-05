@@ -1,6 +1,3 @@
-import { type Href, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   AppHeader,
   DebtRow,
@@ -8,7 +5,7 @@ import {
   PrimaryButton,
   Stepper,
 } from "@/components";
-import { colors, commonStyles, spacing, typography } from "@/constants/theme";
+import { colors, commonStyles, radii, shadows, spacing, typography } from "@/constants/theme";
 import {
   debtsMock,
   paymentSummaryMock,
@@ -16,14 +13,27 @@ import {
   ticketParticipantsMock,
 } from "@/data";
 import { ticketFlowSteps } from "@/data/stepper";
+import { useTicketSplitStore } from "@/store/ticketSplitStore";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { calculatePersonSummary } from "@/utils/ticketReview";
+import { type Href, useRouter } from "expo-router";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TicketExpensesScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const reviewItems = useTicketSplitStore((s) => s.reviewItems);
 
   const personById = Object.fromEntries(
     ticketParticipantsMock.map((p) => [p.id, p]),
   );
+
+  const totalConsumed = reviewItems.length
+    ? reviewItems.reduce((sum, item) => sum + item.total, 0)
+    : paymentSummaryMock.totalConsumed;
+
+  const difference = paymentSummaryMock.totalPaid - totalConsumed;
 
   const resolve = (pid: string) =>
     personById[pid] ?? {
@@ -46,7 +56,7 @@ export default function TicketExpensesScreen() {
           {ticketFlowMeta.dateLabel} · {ticketFlowMeta.peopleCount} personas
         </Text>
         <View style={styles.stepper}>
-          <Stepper steps={ticketFlowSteps} activeIndex={2} />
+          <Stepper steps={ticketFlowSteps} activeIndex={3} />
         </View>
 
         <Text style={styles.blockTitle}>Resumen de pagos</Text>
@@ -56,6 +66,18 @@ export default function TicketExpensesScreen() {
           totalConsumed={paymentSummaryMock.totalConsumed}
           difference={paymentSummaryMock.difference}
         />
+
+        {reviewItems.length > 0 ? (
+          <View style={styles.personSummary}>
+            <Text style={styles.sectionTitle}>Resumen por persona</Text>
+            {calculatePersonSummary(reviewItems, ticketParticipantsMock).map((summary) => (
+              <View key={summary.personId} style={styles.personSummaryRow}>
+                <Text style={styles.personSummaryName}>{summary.name}</Text>
+                <Text style={styles.personSummaryAmount}>{formatCurrency(summary.amount)}</Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
 
         <Text style={styles.debtsTitle}>¿Quién le debe a quién?</Text>
         <View style={styles.debts}>
@@ -101,4 +123,32 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   debts: { marginBottom: spacing.md },
+  personSummary: {
+    marginTop: spacing.lg,
+    padding: spacing.lg,
+    borderRadius: radii.card,
+    backgroundColor: colors.cardGlass,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    ...shadows.soft,
+  },
+  sectionTitle: {
+    ...typography.bodyMedium,
+    fontWeight: "700",
+    color: colors.text,
+    marginBottom: spacing.sm,
+  },
+  personSummaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: spacing.sm,
+  },
+  personSummaryName: {
+    ...typography.bodyMedium,
+    color: colors.text,
+  },
+  personSummaryAmount: {
+    ...typography.bodyMedium,
+    color: colors.primaryDark,
+  },
 });

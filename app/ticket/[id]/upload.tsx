@@ -1,12 +1,12 @@
-import { Ionicons } from "@expo/vector-icons";
-import { type Href, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppHeader, PrimaryButton, Stepper } from "@/components";
 import { colors, commonStyles, radii, shadows, spacing, typography } from "@/constants/theme";
 import { ticketFlowMeta, ticketFlowTip } from "@/data";
 import { ticketFlowSteps } from "@/data/stepper";
 import { useTicketRouteId } from "@/hooks/useTicketRouteId";
+import { Ionicons } from "@expo/vector-icons";
+import { type Href, useRouter } from "expo-router";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TicketUploadScreen() {
   const id = useTicketRouteId();
@@ -49,7 +49,7 @@ export default function TicketUploadScreen() {
 
         <PrimaryButton
           label="Seleccionar foto"
-          onPress={() => router.push(`/ticket/${id}/split` as Href)}
+          onPress={() => router.push(`/ticket/${id}/review` as Href)}
         />
       </ScrollView>
     </View>

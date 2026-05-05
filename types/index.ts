@@ -44,6 +44,30 @@ export type TicketLineItem = {
   price: number;
 };
 
+export type TicketReviewItem = {
+  id: string;
+  label: string;
+  notes?: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
+  assignedQuantities: Record<string, number>;
+};
+
+export type TicketReviewAssignment = {
+  itemId: string;
+  personId: string;
+  quantity: number;
+  amount: number;
+};
+
+export type PersonAmountSummary = {
+  personId: string;
+  name: string;
+  assignedQuantity: number;
+  amount: number;
+};
+
 export type DebtTransfer = {
   id: string;
   fromPersonId: string;

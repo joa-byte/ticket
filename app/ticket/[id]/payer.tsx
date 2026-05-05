@@ -1,18 +1,18 @@
-import { type Href, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppHeader, PrimaryButton, Stepper } from "@/components";
 import { PersonAvatarSelectable } from "@/components/PersonAvatarSelectable";
 import { colors, commonStyles, radii, shadows, spacing, typography } from "@/constants/theme";
 import {
-  paymentSummaryMock,
-  ticketFlowMeta,
-  ticketParticipantsMock,
+    paymentSummaryMock,
+    ticketFlowMeta,
+    ticketParticipantsMock,
 } from "@/data";
 import { ticketFlowSteps } from "@/data/stepper";
-import { useTicketSplitStore } from "@/store/ticketSplitStore";
 import { useTicketRouteId } from "@/hooks/useTicketRouteId";
+import { useTicketSplitStore } from "@/store/ticketSplitStore";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { type Href, useRouter } from "expo-router";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TicketPayerScreen() {
   const id = useTicketRouteId();
@@ -37,7 +37,7 @@ export default function TicketPayerScreen() {
           {ticketFlowMeta.dateLabel} · {ticketFlowMeta.peopleCount} personas
         </Text>
         <View style={styles.stepper}>
-          <Stepper steps={ticketFlowSteps} activeIndex={1} />
+          <Stepper steps={ticketFlowSteps} activeIndex={2} />
         </View>
 
         <Text style={styles.blockTitle}>¿Quién pagó?</Text>
